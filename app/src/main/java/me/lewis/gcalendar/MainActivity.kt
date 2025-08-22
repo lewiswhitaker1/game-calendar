@@ -31,7 +31,6 @@ import java.util.Calendar as JavaCalendar
 
 class MainActivity : AppCompatActivity() {
 
-    // --- NEW: UI variables for the header ---
     private lateinit var monthYearText: TextView
     private lateinit var previousMonthButton: ImageButton
     private lateinit var nextMonthButton: ImageButton
@@ -60,12 +59,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Initialize UI components
         calendarView = findViewById(R.id.calendarView)
         listViewEvents = findViewById(R.id.listViewEvents)
         textViewSelectedDate = findViewById(R.id.textViewSelectedDate)
         fabAddEvent = findViewById(R.id.fabAddEvent)
-        // --- NEW: Initialize header components ---
         monthYearText = findViewById(R.id.monthYearText)
         previousMonthButton = findViewById(R.id.previousMonthButton)
         nextMonthButton = findViewById(R.id.nextMonthButton)
@@ -146,13 +143,11 @@ class MainActivity : AppCompatActivity() {
         calendarView.setup(startMonth, endMonth, firstDayOfWeek)
         calendarView.scrollToMonth(currentMonth)
 
-        // --- NEW: Listen for month scrolls to update the title ---
         calendarView.monthScrollListener = { month ->
             val title = "${month.yearMonth.month.name.lowercase().replaceFirstChar { it.titlecase() }} ${month.yearMonth.year}"
             monthYearText.text = title
         }
 
-        // --- NEW: Add click listeners for the navigation arrows ---
         nextMonthButton.setOnClickListener {
             calendarView.findFirstVisibleMonth()?.let {
                 calendarView.smoothScrollToMonth(it.yearMonth.plusMonths(1))
@@ -166,7 +161,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // All other functions remain the same...
     private fun fetchEvents() {
         RetrofitClient.instance.getEvents().enqueue(object : Callback<List<Event>> {
             override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {

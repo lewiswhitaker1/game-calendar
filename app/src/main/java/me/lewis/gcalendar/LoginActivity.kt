@@ -18,31 +18,24 @@ import retrofit2.Response
 
 class LoginActivity : AppCompatActivity() {
 
-    // NEW: Declare the ActivityResultLauncher
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        // NEW: Initialize the permission launcher. This defines what happens after the user responds.
         requestPermissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                // Permission is granted. You can show a message if you want.
                 Toast.makeText(this, "Notifications enabled!", Toast.LENGTH_SHORT).show()
             } else {
-                // Explain to the user that they will not get notifications.
                 Toast.makeText(this, "You won't get game alerts without notifications.", Toast.LENGTH_LONG).show()
             }
         }
 
-        // NEW: Ask for the permission right away.
         askNotificationPermission()
 
-
-        // Check if user is already logged in
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         if (prefs.getString("LOGGED_IN_USER", null) != null) {
             startActivity(Intent(this, MainActivity::class.java))
@@ -78,16 +71,12 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    // NEW: Function to check for and request notification permission
     private fun askNotificationPermission() {
-        // This is only required for Android 13 (API level 33) and above.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
                 PackageManager.PERMISSION_GRANTED
             ) {
-                // Permission is already granted.
             } else {
-                // Directly ask for the permission.
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
