@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "316082986751",
+    "project_id": "gamecalendar-6075c",
+    "storage_bucket": "gamecalendar-6075c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:316082986751:android:5327cc1d339955276176ca",
+        "android_client_info": {
+          "package_name": "me.lewis.gcalendar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnY7aD2sWHzGoE0A6QmgGwgHHhCFH1SFM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
