@@ -43,16 +43,16 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        val spinnerName: Spinner = findViewById(R.id.spinnerName)
+        val spinnerName: AutoCompleteTextView = findViewById(R.id.spinnerName)
         val editTextPin: EditText = findViewById(R.id.editTextPin)
         val buttonLogin: Button = findViewById(R.id.buttonLogin)
 
         val users = arrayOf("Lewis", "Joe", "Polly")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, users)
-        spinnerName.adapter = adapter
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, users)
+        spinnerName.setAdapter(adapter)
 
         buttonLogin.setOnClickListener {
-            val name = spinnerName.selectedItem.toString()
+            val name = spinnerName.text.toString()
             val pin = editTextPin.text.toString()
 
             if (pin.isEmpty()) {

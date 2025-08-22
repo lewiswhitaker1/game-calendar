@@ -14,7 +14,9 @@ import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
+import com.google.android.material.color.MaterialColors
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
@@ -28,12 +30,16 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Calendar as JavaCalendar
+import com.google.android.material.R as MaterialR
+import android.content.Intent
+import me.lewis.gcalendar.UpcomingEventsActivity
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var monthYearText: TextView
     private lateinit var previousMonthButton: ImageButton
     private lateinit var nextMonthButton: ImageButton
+    private lateinit var upcomingEventsButton: ImageButton
 
     private lateinit var calendarView: CalendarView
     private var selectedDate: LocalDate? = LocalDate.now()
@@ -66,10 +72,15 @@ class MainActivity : AppCompatActivity() {
         monthYearText = findViewById(R.id.monthYearText)
         previousMonthButton = findViewById(R.id.previousMonthButton)
         nextMonthButton = findViewById(R.id.nextMonthButton)
+        upcomingEventsButton = findViewById(R.id.upcomingEventsButton)
 
         updateDateText()
         setupAutoRefresh()
         setupCalendar()
+
+        upcomingEventsButton.setOnClickListener {
+            startActivity(Intent(this, UpcomingEventsActivity::class.java))
+        }
 
         fabAddEvent.setOnClickListener { showAddTimeDialog() }
         listViewEvents.setOnItemLongClickListener { _, _, position, _ ->
@@ -89,6 +100,7 @@ class MainActivity : AppCompatActivity() {
         class DayViewContainer(view: View) : ViewContainer(view) {
             val textView: TextView = view.findViewById(R.id.calendarDayText)
             val dotsContainer: LinearLayout = view.findViewById(R.id.dotsContainer)
+            val selectedBackground: View = view.findViewById(R.id.selectedBackground)
             lateinit var day: CalendarDay
 
             init {
@@ -116,9 +128,11 @@ class MainActivity : AppCompatActivity() {
                 dotsContainer.removeAllViews()
 
                 if (data.date == selectedDate) {
-                    textView.setBackgroundColor(Color.LTGRAY)
+                    textView.setTextColor(MaterialColors.getColor(textView.context, MaterialR.attr.colorOnPrimary, Color.WHITE))
+                    container.selectedBackground.visibility = View.VISIBLE
                 } else {
-                    textView.background = null
+                    textView.setTextColor(MaterialColors.getColor(textView.context, MaterialR.attr.colorOnSurface, Color.BLACK))
+                    container.selectedBackground.visibility = View.GONE
                 }
 
                 val usersForDay = allEvents.filter { it.date == data.date.format(dateFormatter) }
@@ -199,7 +213,7 @@ class MainActivity : AppCompatActivity() {
             val time = String.format("%02d:%02d", hour, minute)
             addNewEvent(time)
         }
-        TimePickerDialog(this, timeSetListener, cal.get(JavaCalendar.HOUR_OF_DAY), cal.get(JavaCalendar.MINUTE), true).show()
+        TimePickerDialog(this, MaterialR.style.ThemeOverlay_MaterialComponents_TimePicker, timeSetListener, cal.get(JavaCalendar.HOUR_OF_DAY), cal.get(JavaCalendar.MINUTE), true).show()
     }
 
     private fun addNewEvent(time: String) {
